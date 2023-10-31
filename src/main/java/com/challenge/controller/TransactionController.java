@@ -1,25 +1,28 @@
 package com.challenge.controller;
 
+import com.challenge.model.Transaction;
 import com.challenge.service.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Component
 @RestController
+@RequestMapping("/api")
 public class TransactionController {
 
     @Autowired
     public TransactionService transactionService;
 
-    @GetMapping("/")
-    public String helloWorld() {
-        return "Hello World!";
-    }
-
-    @GetMapping("/transactions")
-    public boolean createTransaction() {
-        return transactionService.createTransaction();
+    @PutMapping("/transactions/{transactionId}")
+    public ResponseEntity createTransaction(
+            @PathVariable Long transactionId,
+            @Valid @RequestBody Transaction transaction
+    ) {
+        Transaction createdTransaction = transactionService.createTransaction(transactionId, transaction);
+        if (createdTransaction == null) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok().build();
     }
 }
