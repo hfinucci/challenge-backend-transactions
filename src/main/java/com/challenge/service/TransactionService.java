@@ -21,4 +21,8 @@ public class TransactionService {
     public List<Long> getTransactionsByType(String type) {
         return transactionPersistence.getTransactionsByType(type);
     }
+
+    public Optional<Long> getTransitiveAmountSum(Long transactionId) {
+        return transactionPersistence.getTransitiveAmountSum(transactionId);
+    }
 }

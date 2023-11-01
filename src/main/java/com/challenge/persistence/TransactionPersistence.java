@@ -11,6 +11,9 @@ public class TransactionPersistence {
     private final Map<Long, Transaction> transactionMap = new HashMap<>();
 
     public Optional<Transaction> createTransaction(Long transactionId, Transaction transaction) {
+        if (transaction.getParentId() != null && transactionMap.get(transaction.getParentId()) == null) {
+            throw new IllegalArgumentException("Parent transaction not found");
+        }
         transaction.setId(transactionId);
         transactionMap.put(transactionId, transaction);
         return Optional.of(transaction);
@@ -25,8 +28,25 @@ public class TransactionPersistence {
         }
         return transactionsId;
     }
-
-    public Long getTransitiveSum(long l) {
-        return null;
+    public Optional<Long> getTransitiveAmountSum(Long transactionId) {
+        if (transactionMap.get(transactionId) == null) {
+            return Optional.empty();
+        }
+        LinkedHashSet<Long> transitiveChildrenIds = new LinkedHashSet<>();
+        for (Map.Entry<Long, Transaction> entry : transactionMap.entrySet()) {
+            Long currentTransactionId = entry.getKey();
+            Long parentId = entry.getValue().getParentId();
+            LinkedHashSet<Long> theseIds = new LinkedHashSet<>();
+            while (parentId != null) {
+                theseIds.add(currentTransactionId);
+                if (parentId.equals(transactionId)) {
+                    transitiveChildrenIds.addAll(theseIds);
+                }
+                parentId = transactionMap.get(parentId).getParentId();
+            }
+        }
+        transitiveChildrenIds.add(transactionId);
+        return transitiveChildrenIds.stream().map(id -> transactionMap.get(id).getAmount().longValue()).reduce(Long::sum);
     }
+
 }

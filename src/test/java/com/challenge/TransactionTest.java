@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -35,22 +36,27 @@ public class TransactionTest {
 
     @Test
     public void createTransactionsAndReturnSumOfTransitiveChildren() {
-        Transaction transaction1 = new Transaction(100d, "car");
-        Transaction transaction2 = new Transaction(200d, "car");
-        Transaction transaction3 = new Transaction(300d, "laptop");
+        Transaction transaction1 = new Transaction(100d, "phone");
+        Transaction transaction2 = new Transaction(200d, "phone");
+        Transaction transaction3 = new Transaction(300d, "pen");
+        Transaction transaction4 = new Transaction(500d, "pen");
 
         transaction2.setParentId(1L);
         transaction3.setParentId(2L);
+        transaction4.setParentId(2L);
 
         transactionPersistence.createTransaction(1L, transaction1);
         transactionPersistence.createTransaction(2L, transaction2);
         transactionPersistence.createTransaction(3L, transaction3);
+        transactionPersistence.createTransaction(4L, transaction4);
 
-        Long sum1 = transactionPersistence.getTransitiveSum(1L);
-        Long sum2 = transactionPersistence.getTransitiveSum(2L);
+        Optional<Long> sum1 = transactionPersistence.getTransitiveAmountSum(1L);
+        Optional<Long> sum2 = transactionPersistence.getTransitiveAmountSum(2L);
+        Optional<Long> sum3 = transactionPersistence.getTransitiveAmountSum(3L);
 
-        assertEquals(sum1, 600);
-        assertEquals(sum2, 300);
+        assertEquals(sum1.get(), 1100);
+        assertEquals(sum2.get(), 1000);
+        assertEquals(sum3.get(), 300);
     }
 
 }
