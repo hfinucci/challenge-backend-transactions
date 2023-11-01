@@ -16,13 +16,17 @@ public class TransactionPersistence {
         return Optional.of(transaction);
     }
 
-    public List<Transaction> getTransactionsByType(String type) {
-        List<Transaction> transactionsByType = new ArrayList<>();
+    public List<Long> getTransactionsByType(String type) {
+        List<Long> transactionsId = new ArrayList<>();
         for (Transaction transaction : transactionMap.values()) {
             if (transaction.getType().equals(type)) {
-                transactionsByType.add(transaction);
+                transactionsId.add(transaction.getId());
             }
         }
-        return transactionsByType;
+        return transactionsId;
+    }
+
+    public Long getTransitiveSum(long l) {
+        return null;
     }
 }

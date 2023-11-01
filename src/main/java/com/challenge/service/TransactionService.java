@@ -19,7 +19,6 @@ public class TransactionService {
     }
 
     public List<Long> getTransactionsByType(String type) {
-        List<Transaction> transactions = transactionPersistence.getTransactionsByType(type);
-        return transactions.stream().map(Transaction::getId).toList();
+        return transactionPersistence.getTransactionsByType(type);
     }
 }
