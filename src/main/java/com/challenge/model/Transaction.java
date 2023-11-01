@@ -7,6 +7,8 @@ import org.springframework.lang.NonNull;
 @Data
 public class Transaction {
 
+    private Long id;
+
     @NonNull
     @JsonProperty("amount")
     private Double amount;
