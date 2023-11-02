@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -53,12 +55,14 @@ public class TransactionController {
     }
 
     @GetMapping("/sum/{transactionId}")
-    public ResponseEntity<Long> getTransitiveAmountSum(@PathVariable Long transactionId) {
+    public ResponseEntity<Map<String, Long>> getTransitiveAmountSum(@PathVariable Long transactionId) {
         Optional<Long> sum = transactionService.getTransitiveAmountSum(transactionId);
+        Map<String, Long> response = new HashMap<>();
         if (sum.isEmpty()) {
             log.info("No children transactions found for id: " + transactionId);
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(sum.get());
+        response.put("sum", sum.get());
+        return ResponseEntity.ok(response);
     }
 }

@@ -36,11 +36,11 @@ public class TransactionPersistence {
         for (Map.Entry<Long, Transaction> entry : transactionMap.entrySet()) {
             Long currentTransactionId = entry.getKey();
             Long parentId = entry.getValue().getParentId();
-            LinkedHashSet<Long> theseIds = new LinkedHashSet<>();
+            LinkedHashSet<Long> possibleTransactionIds = new LinkedHashSet<>();
             while (parentId != null) {
-                theseIds.add(currentTransactionId);
+                possibleTransactionIds.add(currentTransactionId);
                 if (parentId.equals(transactionId)) {
-                    transitiveChildrenIds.addAll(theseIds);
+                    transitiveChildrenIds.addAll(possibleTransactionIds);
                 }
                 parentId = transactionMap.get(parentId).getParentId();
             }
