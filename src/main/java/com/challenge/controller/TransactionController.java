@@ -26,6 +26,10 @@ public class TransactionController {
             @PathVariable Long transactionId,
             @Valid @RequestBody Transaction transaction
     ) {
+        if (transactionId < 0) {
+            log.info("Invalid request: Transaction id cannot be negative");
+            return ResponseEntity.badRequest().build();
+        }
         if (transaction.getParentId() != null && transaction.getParentId().equals(transactionId)) {
             log.info("Invalid request: Transaction cannot be parent of itself");
             return ResponseEntity.badRequest().build();

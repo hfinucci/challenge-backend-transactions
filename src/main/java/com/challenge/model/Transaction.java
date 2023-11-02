@@ -1,5 +1,6 @@
 package com.challenge.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.lang.NonNull;
@@ -7,6 +8,7 @@ import org.springframework.lang.NonNull;
 @Data
 public class Transaction {
 
+    @JsonIgnore
     private Long id;
 
     @NonNull
