@@ -8,7 +8,7 @@ Por otro lado, si se prefiere buildear la imagen localmente:
 >docker build -t backend-challenge .
 
 Una vez que se tiene la imagen se puede levantar un contenedor con:
->docker run -it -p 8080:8080 challenge-backend
+>docker run -it -p 8080:8080 backend-challenge
 
 ## Aclaraciones de la implementación
 
